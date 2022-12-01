@@ -1,5 +1,5 @@
-# aoc2021
-Advent of Code 2021
+# aoc2022
+Advent of Code 2022
 
 To run a solution, use the `./run.sh` script:
 
