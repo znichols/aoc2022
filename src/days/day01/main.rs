@@ -7,20 +7,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
     let input = fs::read_to_string(&args[1])?;
 
-    let elf_bag = input.split("\n\n")
+    let mut elf_sums: Vec<i32> = input.split("\n\n")
         .map(|l| {
-            l.split('\n').flat_map(|n| n.parse::<i32>())
-                .collect::<Vec<_>>()
-        });
+            l.split('\n').flat_map(|n| n.parse::<i32>()).sum()
+        }).collect();
 
-    let mut elf_sum: Vec<i32> = elf_bag.map(|b| {
-        b.iter().sum()
-    }).collect();
+    elf_sums.sort_by(|a, b| b.cmp(a));
 
-    elf_sum.sort_by(|a, b| b.cmp(a));
-
-    println!("{:?}", elf_sum[0]);
-    println!("{:?}", &elf_sum[..3].iter().sum::<i32>());
+    println!("{:?}", elf_sums[0]);
+    println!("{:?}", &elf_sums[..3].iter().sum::<i32>());
 
     Ok(())
 }
