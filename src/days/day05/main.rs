@@ -34,7 +34,6 @@ fn move_crates(i: usize, j: usize, n: usize, crates: &mut [Vec<char>]) {
 }
 
 fn do_move_instructions(instructions: &str, crates: &mut [Vec<char>], grouped: bool) {
-    println!("{:?}", crates);
     for line in instructions.split('\n') {
         if line.is_empty() {
             continue;
@@ -50,7 +49,6 @@ fn do_move_instructions(instructions: &str, crates: &mut [Vec<char>], grouped: b
         } else {
             move_crates(from, to, times, crates);
         }
-        println!("{:?}", crates);
     }
 }
 
