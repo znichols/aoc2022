@@ -3,7 +3,7 @@ use std::error::Error;
 use std::fs;
 
 fn parse_crates(s: &str) -> Vec<Box<Vec<char>>> {
-    let mut lines: Vec<&str> = s.split('\n').collect();
+    let lines: Vec<&str> = s.split('\n').collect();
     let num_stacks = lines[lines.len() - 1]
         .split_whitespace()
         .flat_map(|s| s.parse::<u32>())
