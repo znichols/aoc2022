@@ -2,7 +2,7 @@ use std::env;
 use std::error::Error;
 use std::fs;
 
-fn parse_crates(s: &str) -> Vec<Box<Vec<char>>> {
+fn parse_crates(s: &str) -> Vec<Vec<char>> {
     let lines: Vec<&str> = s.split('\n').collect();
     let num_stacks = lines[lines.len() - 1]
         .split_whitespace()
@@ -10,15 +10,14 @@ fn parse_crates(s: &str) -> Vec<Box<Vec<char>>> {
         .max()
         .unwrap();
 
-    let mut crate_stacks: Vec<Box<Vec<char>>> =
-        (0..num_stacks).map(|_| Box::new(Vec::new())).collect();
+    let mut crate_stacks: Vec<Vec<char>> = (0..num_stacks).map(|_| Vec::new()).collect();
     for i in (0..lines.len() - 1).rev() {
         let this_line = lines[i];
         for j in (0..this_line.len()).step_by(4) {
             let this_block = &this_line[j..j + 3];
             let block_char = this_block.chars().nth(1).unwrap();
             if block_char != ' ' {
-                let v = &mut *crate_stacks[j / 4];
+                let v = crate_stacks.get_mut(j / 4).unwrap();
                 v.push(block_char);
             }
         }
@@ -27,17 +26,15 @@ fn parse_crates(s: &str) -> Vec<Box<Vec<char>>> {
     crate_stacks
 }
 
-fn move_crates(i: usize, j: usize, n: usize, crates: &mut [Box<Vec<char>>]) {
-    let mut tail: Vec<char>;
-    {
-        let from_crate = &mut crates[i];
-        tail = from_crate.split_off(from_crate.len() - n);
-    }
-    let to_crate = &mut crates[j];
+fn move_crates(i: usize, j: usize, n: usize, crates: &mut [Vec<char>]) {
+    let from_crate = crates.get_mut(i).unwrap();
+    let mut tail = from_crate.split_off(from_crate.len() - n);
+    let to_crate = crates.get_mut(j).unwrap();
     to_crate.append(&mut tail);
 }
 
-fn do_move_instructions(instructions: &str, crates: &mut [Box<Vec<char>>], grouped: bool) {
+fn do_move_instructions(instructions: &str, crates: &mut [Vec<char>], grouped: bool) {
+    println!("{:?}", crates);
     for line in instructions.split('\n') {
         if line.is_empty() {
             continue;
@@ -53,6 +50,7 @@ fn do_move_instructions(instructions: &str, crates: &mut [Box<Vec<char>>], group
         } else {
             move_crates(from, to, times, crates);
         }
+        println!("{:?}", crates);
     }
 }
 
